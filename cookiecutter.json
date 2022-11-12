@@ -1,0 +1,15 @@
+{
+  "github_username": "berquerant",
+  "author_name": "",
+  "author_email": "",
+  "project_name": "Go project template",
+  "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "project_description": "",
+  "project_category": [
+    "Code-Generator"
+  ],
+  "go_version": [
+    "1.19",
+    "1.18"
+  ]
+}

@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+
+[dev-packages]
+pytest = "*"
+cookiecutter = "*"
+pytest-cookies = "*"
+
+[requires]
+python_version = "3.11"
+
+[scripts]
+test = "pytest -s -v --ff --doctest-modules tests"
