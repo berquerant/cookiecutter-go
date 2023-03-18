@@ -47,10 +47,10 @@ def check_result(result):
     sequnce = [
         ["git", "init"],
         ["git", "add", "-A"],
-        ["git", "commit", "-m", "Initial commit"],
+        ["git", "commit", "-m", "Init"],
         ["git", "tag", "v0.1.0"],
-        ["make", "docker-test"],
-        ["make", "linux-amd"],
+        ["make", "test"],
+        ["make"],
     ]
 
     for seq in sequnce:
@@ -62,9 +62,19 @@ def test_bake_and_make_default(cookies):
         check_result(result)
 
 
-def test_bake_and_make_go118(cookies):
+def test_bake_and_make_go118_command(cookies):
     context = {
         "go_version": "1.18",
+        "project_category": "Command",
+    }
+    with bake(cookies, extra_context=context) as result:
+        check_result(result)
+
+
+def test_bake_and_make_go118_code_generator(cookies):
+    context = {
+        "go_version": "1.18",
+        "project_category": "Code-Generator",
     }
     with bake(cookies, extra_context=context) as result:
         check_result(result)

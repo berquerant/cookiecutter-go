@@ -6,9 +6,12 @@
   "project_slug": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
   "project_description": "",
   "project_category": [
+    "Command",
     "Code-Generator"
   ],
+  "command_name": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
   "go_version": [
+    "1.20",
     "1.19",
     "1.18"
   ]

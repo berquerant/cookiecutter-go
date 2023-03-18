@@ -3,7 +3,7 @@
 ## Features
 
 - code generator template
-- golden test
+- unit test
 - e2e test
 
 ## Requirements
