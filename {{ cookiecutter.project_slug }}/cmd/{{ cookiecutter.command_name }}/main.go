@@ -1,18 +1,22 @@
 package main
 
 import (
+{% if cookiecutter.project_category == "Code-Generator" -%}
 	"bytes"
-	"flag"
-	"fmt"
 	"io"
-	"log"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+{%- endif %}
+	"os"
+	"flag"
+	"fmt"
+	"log"
 
 	ldflags "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}"
+{% if cookiecutter.project_category == "Code-Generator" -%}
 	"golang.org/x/tools/go/packages"
+{%- endif %}
 )
 
 const usage = `{{ cookiecutter.command_name }} - {{ cookiecutter.project_description }}
@@ -35,11 +39,10 @@ func PrintLdflags() {
 func main() {
 	var (
 		version = flag.Bool("version", false, "print version")
-		{% if cookiecutter.project_category == "Code-Generator" -%}
+{% if cookiecutter.project_category == "Code-Generator" -%}
 		redirectToStdout = flag.Bool("stdout", false, "print result to stdout")
-		goImports        = flag.String("goimports", "goimports", "goimports executable")
 		output           = flag.String("output", "", "output file name; default srcdir/{{ cookiecutter.command_name }}.go")
-		{%- endif %}
+{%- endif %}
 	)
 
 	log.SetFlags(0)
@@ -53,7 +56,7 @@ func main() {
 		return
 	}
 
-	{% if cookiecutter.project_category == "Code-Generator" -%}
+{% if cookiecutter.project_category == "Code-Generator" -%}
 	g := NewGenerator()
 	g.parsePackage(flag.Args())
 
@@ -64,30 +67,28 @@ func main() {
 		log.Panicf("during generation %v", err)
 	}
 
-	w := NewResultWriter(flag.Args(), *output, *goImports, *redirectToStdout)
+	w := NewResultWriter(flag.Args(), *output, *redirectToStdout)
 	if err := w.writeResult(g.Bytes()); err != nil {
 		log.Panicf("write file %v", err)
 	}
-	{%- elif cookiecutter.project_category == "Command" -%}
+{%- elif cookiecutter.project_category == "Command" -%}
 	fmt.Println("Hello!")
-	{%- endif %}
+{%- endif %}
 }
 
 {% if cookiecutter.project_category == "Code-Generator" -%}
-func NewResultWriter(args []string, output, goImports string, redirectToStdout bool) *ResultWriter {
+func NewResultWriter(args []string, output string, redirectToStdout bool) *ResultWriter {
 	return &ResultWriter{
 		args:             args,
 		output:           output,
-		goImports:        goImports,
 		redirectToStdout: redirectToStdout,
 	}
 }
 
 type ResultWriter struct {
 	args            []string
-	goImports       string
 	output          string
-	rediectToStdout bool
+	redirectToStdout bool
 }
 
 func (r *ResultWriter) writeResult(src []byte) error {
@@ -98,7 +99,7 @@ func (r *ResultWriter) writeResult(src []byte) error {
 }
 
 func (r *ResultWriter) writeToStdout(src []byte) error {
-	f, err := os.CreateTemp("", "{{ cookiecustter.command_name }}")
+	f, err := os.CreateTemp("", "{{ cookiecutter.command_name }}")
 	if err != nil {
 		return fmt.Errorf("failed to create temp file: %w", err)
 	}
@@ -130,25 +131,25 @@ func (r *ResultWriter) write(src []byte, fileName string) error {
 	return nil
 }
 
-func (r *ResultWriter) format(targetFile string) {
-	cmd := exec.Command(r.goImports, "-w", targetFile)
+func (r *ResultWriter) format(targetFile string) error {
+	cmd := exec.Command("go", "run", "golang.org/x/tools/cmd/goimports@v0.7.0", "-w", targetFile)
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
 }
 
-func (r *ResultWriter) desfFilename() string {
+func (r *ResultWriter) destFilename() string {
 	if r.output != "" {
 		return r.output
 	}
-	return filepath.Join(r.destDir(), "{{ cookiecustter.command_name }}_generated.go")
+	return filepath.Join(r.destDir(), "{{ cookiecutter.command_name }}_generated.go")
 }
 
 func (r *ResultWriter) destDir() string {
 	if len(r.args) == 0 {
-		args = []string{"."}
+		r.args = []string{"."}
 	}
 	if len(r.args) == 1 && isDirectory(r.args[0]) {
-		return args[0]
+		return r.args[0]
 	}
 	return filepath.Dir(r.args[0])
 }
@@ -191,5 +192,4 @@ func (g *Generator) Generate() error {
 	g.printf("func Generated() {}")
 	return nil
 }
-
 {%- endif %}

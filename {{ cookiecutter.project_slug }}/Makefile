@@ -16,16 +16,19 @@ LDFLAGS = -ldflags="-X '$(LDFLAGS_PKG).AuthorName={{ cookiecutter.author_name }}
 .PHONY: $(BIN)
 $(BIN):
 	$(GOBUILD) -v -o $@ $(LDFLAGS)
-	$(BIN) -version
 
 DOCKER_RUN = docker run --rm -v "$(ROOT)":/usr/src/myapp -w /usr/src/myapp
 DOCKER_IMAGE = golang:{{ cookiecutter.go_version }}
 
 .PHONY: test
 test:
-ifdef DOCKER_TEST
-	$(GOMOD) tidy
-	$(DOCKER_RUN) $(DOCKER_IMAGE) make test
+ifdef COOKIECUTTER_GO_DOCKER_TEST
+	$(DOCKER_RUN) $(DOCKER_IMAGE) $(GOTEST) -v -cover $(LDFLAGS) ./...
 else
 	$(GOTEST) -v -cover $(LDFLAGS) ./...
 endif
+
+.PHONY: init
+init:
+	$(GOMOD) tidy
+	go install golang.org/x/tools/cmd/goimports@latest

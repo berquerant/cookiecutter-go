@@ -3,7 +3,7 @@
 ## Features
 
 - code generator template
-- unit test
+- command template
 - e2e test
 
 ## Requirements

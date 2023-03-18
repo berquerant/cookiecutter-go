@@ -1,8 +1,7 @@
 package main_test
 
 import (
-	"io"
-	"os"
+  "os"
 	"os/exec"
 	"path/filepath"
 	"testing"
@@ -16,8 +15,8 @@ func TestEndToEnd(t *testing.T) {
 		t.Fatalf("%s version %v", e.cmd, err)
 	}
 
-	{% if cookiecutter.project_category == "Code-Generator" -%}
-	for _, tc := range []endToEndtestcase{
+{% if cookiecutter.project_category == "Code-Generator" -%}
+	for _, tc := range []endToEndTestcase{
 		{
 			title:    "example",
 			fileName: "example.go",
@@ -32,7 +31,7 @@ func main() {
 			tc.test(t, e)
 		})
 	}
-	{%- endif %}
+{%- endif %}
 }
 
 func run(name string, arg ...string) error {
@@ -41,21 +40,6 @@ func run(name string, arg ...string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
-}
-
-func copyFile(to, from string) error {
-	toFile, err := os.Create(to)
-	if err != nil {
-		return err
-	}
-	defer toFile.Close()
-	fromFile, err := os.Open(from)
-	if err != nil {
-		return err
-	}
-	defer fromFile.Close()
-	_, err = io.Copy(toFile, fromFile)
-	return err
 }
 
 type executor struct {
@@ -89,31 +73,6 @@ func (e *executor) close() {
 	os.RemoveAll(e.dir)
 }
 
-func (e *executor) compileAndRun(
-	t *testing.T,
-	fileName string,
-) {
-	t.Helper()
-	src := filepath.Join(e.dir, fileName)
-	if err := copyFile(src, filepath.Join("testdata", fileName)); err != nil {
-		t.Fatal(err)
-	}
-	outputSrc := filepath.Join(e.dir, "{{ cookiecutter.command_name }}.go")
-	// generate code
-	// please change arguments depending on the genarator
-	if err := run(
-		e.cmd,
-		"-output", outputSrc,
-	); err != nil {
-		t.Fatal(err)
-	}
-	defer os.Remove(outputSrc)
-	// run with generated code
-	if err := run("go", "run", outputSrc, src); err != nil {
-		t.Fatal(err)
-	}
-}
-
 {% if cookiecutter.project_category == "Code-Generator" -%}
 type endToEndTestcase struct {
 	title    string
@@ -143,5 +102,4 @@ func (tc *endToEndTestcase) test(t *testing.T, e *executor) {
 		t.Fatal(err)
 	}
 }
-
 {%- endif %}

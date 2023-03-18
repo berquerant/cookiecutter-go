@@ -38,7 +38,6 @@ def check_result(result):
     assert result.exit_code == 0
     assert result.exception is None
     assert result.project_path.is_dir()
-    assert result.project_path.name == "go_project_template"
     project_path = result.project_path
 
     def do(cmd: Union[str, list[str]]):
@@ -46,6 +45,7 @@ def check_result(result):
 
     sequnce = [
         ["git", "init"],
+        ["make", "init"],
         ["git", "add", "-A"],
         ["git", "commit", "-m", "Init"],
         ["git", "tag", "v0.1.0"],
@@ -66,6 +66,7 @@ def test_bake_and_make_go118_command(cookies):
     context = {
         "go_version": "1.18",
         "project_category": "Command",
+        "project_name": "command 118",
     }
     with bake(cookies, extra_context=context) as result:
         check_result(result)
@@ -75,6 +76,7 @@ def test_bake_and_make_go118_code_generator(cookies):
     context = {
         "go_version": "1.18",
         "project_category": "Code-Generator",
+        "project_name": "generator 118",
     }
     with bake(cookies, extra_context=context) as result:
         check_result(result)
