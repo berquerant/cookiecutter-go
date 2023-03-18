@@ -31,4 +31,3 @@ endif
 .PHONY: init
 init:
 	$(GOMOD) tidy
-	go install golang.org/x/tools/cmd/goimports@latest
