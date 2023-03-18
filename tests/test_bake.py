@@ -45,6 +45,9 @@ def check_result(result):
 
     sequnce = [
         ["git", "init"],
+        ["git", "config", "init.defaultBranch", "main"],
+        ["git", "config", "user.email", "test-bake@example.com"],
+        ["git", "config", "user.name", "test-bake"],
         ["make", "init"],
         ["git", "add", "-A"],
         ["git", "commit", "-m", "Init"],
