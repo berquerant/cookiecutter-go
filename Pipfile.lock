@@ -258,11 +258,11 @@
         },
         "pytest-cookies": {
             "hashes": [
-                "sha256:2e2383c12a321753676c8944fb75b3c8ccac70fce58e27d6b201e1a3ff3dab27",
-                "sha256:94c41ad914d420b57bc31d58ab2c0b103322c11d07d13b8d245c85fa9b069714"
+                "sha256:1aaa6b4def8238d0d1709d3d773b423351bfb671c1e3438664d824e0859d6308",
+                "sha256:52770f090d77b16428f6a24a208e6be76addb2e33458035714087b4de49389ea"
             ],
             "index": "pypi",
-            "version": "==0.6.1"
+            "version": "==0.7.0"
         },
         "python-dateutil": {
             "hashes": [
