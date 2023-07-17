@@ -131,19 +131,19 @@
         },
         "click": {
             "hashes": [
-                "sha256:2739815aaa5d2c986a88f1e9230c55e17f0caad3d958a5e13ad0797c166db9e3",
-                "sha256:b97d0c74955da062a7d4ef92fadb583806a585b2ea81958a81bd72726cbb8e37"
+                "sha256:4be4b1af8d665c6d942909916d31a213a106800c47d0eeba73d34da3cbc11367",
+                "sha256:e576aa487d679441d7d30abb87e1b43d24fc53bffb8758443b1a9e1cee504548"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==8.1.4"
+            "version": "==8.1.5"
         },
         "cookiecutter": {
             "hashes": [
-                "sha256:6e1bb4a641e1fc86754a7c55da6ff740e81c1cfb0b3e2fb5699296a395ea2ce2",
-                "sha256:b3437f49d04d359a200b03b63fb9e51be9eb0e751372c318a712a868d72c4f82"
+                "sha256:17ad6751aef0a39d004c5ecacbd18176de6e83505343073fd7e48b60bdac5254",
+                "sha256:d56f18c0c01c09804450b501ac43e8f6104cfa7cdd93610359c68b1ba9fd84d2"
             ],
             "index": "pypi",
-            "version": "==2.2.0"
+            "version": "==2.2.3"
         },
         "idna": {
             "hashes": [
