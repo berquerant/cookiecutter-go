@@ -65,7 +65,7 @@ def test_bake_and_make_default(cookies):
         check_result(result)
 
 
-def test_bake_and_make_go120_command(cookies):
+def test_bake_and_make_go_command(cookies):
     context = {
         "go_version": "1.20",
         "project_category": "Command",
@@ -75,7 +75,7 @@ def test_bake_and_make_go120_command(cookies):
         check_result(result)
 
 
-def test_bake_and_make_go120_code_generator(cookies):
+def test_bake_and_make_go_code_generator(cookies):
     context = {
         "go_version": "1.20",
         "project_category": "Code-Generator",
