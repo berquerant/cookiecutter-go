@@ -33,4 +33,8 @@ jobs:
         run: make
       - name: Test
         run: make test
+      - name: Lint
+        run: make vet
+      - name: Vuln
+        run: make vuln
 {% endraw %}

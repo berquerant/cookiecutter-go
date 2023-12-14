@@ -12,8 +12,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-
-	ldflags "github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slug }}"
 {% if cookiecutter.project_category == "Code-Generator" -%}
 	"golang.org/x/tools/go/packages"
 {%- endif %}
@@ -32,29 +30,17 @@ func Usage() {
 	flag.PrintDefaults()
 }
 
-func PrintLdflags() {
-	fmt.Fprintln(os.Stderr, ldflags.Ldflags())
-}
-
 func main() {
-	var (
-		version = flag.Bool("version", false, "print version")
 {% if cookiecutter.project_category == "Code-Generator" -%}
-		redirectToStdout = flag.Bool("stdout", false, "print result to stdout")
-		output           = flag.String("output", "", "output file name; default srcdir/{{ cookiecutter.command_name }}.go")
+	redirectToStdout := flag.Bool("stdout", false, "print result to stdout")
+	output           := flag.String("output", "", "output file name; default srcdir/{{ cookiecutter.command_name }}.go")
 {%- endif %}
-	)
 
 	log.SetFlags(0)
 	log.SetPrefix("{{ cookiecutter.command_name }}: ")
 
 	flag.Usage = Usage
 	flag.Parse()
-
-	if *version {
-		PrintLdflags()
-		return
-	}
 
 {% if cookiecutter.project_category == "Code-Generator" -%}
 	g := NewGenerator()

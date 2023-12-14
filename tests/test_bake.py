@@ -4,7 +4,6 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Union
 
-import pytest
 from cookiecutter.utils import rmtree
 
 
@@ -53,6 +52,8 @@ def check_result(result):
         ["git", "commit", "-m", "Init"],
         ["git", "tag", "v0.1.0"],
         ["make", "test"],
+        ["make", "vet"],
+        ["make", "vuln"],
         ["make"],
     ]
 
