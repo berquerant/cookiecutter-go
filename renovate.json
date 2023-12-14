@@ -1,0 +1,156 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":label(renovate)",
+    ":prHourlyLimitNone",
+    ":timezone(Asia/Tokyo)",
+    ":rebaseStalePrs",
+    ":disableDependencyDashboard",
+    ":automergePatch",
+    ":automergeDigest",
+    "schedule:weekends"
+  ],
+  "prConcurrentLimit": 3,
+  "platformAutomerge": true,
+  "baseBranches": [
+    "main"
+  ],
+  "rangeStrategy": "auto",
+  "digest": {
+    "addLabels": [
+      "digest"
+    ]
+  },
+  "pin": {
+    "addLabels": [
+      "pin"
+    ]
+  },
+  "patch": {
+    "addLabels": [
+      "patch"
+    ]
+  },
+  "minor": {
+    "addLabels": [
+      "minor"
+    ]
+  },
+  "major": {
+    "addLabels": [
+      "major"
+    ]
+  },
+  "packageRules": [
+    {
+      "groupName": "github-actions",
+      "addLabels": [
+        "github-actions"
+      ],
+      "matchManagers": [
+        "github-actions"
+      ]
+    },
+    {
+      "addLabels": [
+        "pipenv"
+      ],
+      "matchManagers": [
+        "pipenv"
+      ]
+    },
+    {
+      "groupName": "template",
+      "addLabels": [
+        "template"
+      ],
+      "matchFileNames": [
+        "{{ cookiecutter.project_slug }}/**"
+      ]
+    },
+    {
+      "groupName": "golang/go",
+      "addLabels": [
+        "golang/go"
+      ],
+      "matchDepNames": [
+        "golang/go"
+      ]
+    },
+    {
+      "groupName": "python/cpython",
+      "addLabels": [
+        "python/cpython"
+      ],
+      "matchDepNames": [
+        "python/cpython"
+      ]
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Manage github-actions in template",
+      "fileMatch": [
+        "^{{ cookiecutter.project_slug }}/.github/workflows/ci.yml$"
+      ],
+      "matchStrings": [
+        "uses: (?<depName>actions/.+)@(?<currentValue>.+)"
+      ],
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "customType": "regex",
+      "description": "Manage python version in ci.yml",
+      "fileMatch": [
+        "^.github/workflows/ci.yml$"
+      ],
+      "matchStrings": [
+        "python-version: \"(?<currentValue>\\d+\\.\\d+)\""
+      ],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "python/cpython",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+)\\.\\d+$"
+    },
+    {
+      "customType": "regex",
+      "description": "Manage go version in ci.yml",
+      "fileMatch": [
+        "^.github/workflows/ci.yml$"
+      ],
+      "matchStrings": [
+        "go-version: \"(?<currentValue>\\d+\\.\\d+)\""
+      ],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "golang/go",
+      "extractVersionTemplate": "^go(?<version>\\d+\\.\\d+)\\.\\d+$"
+    },
+    {
+      "customType": "regex",
+      "description": "Manage python version in Pipfile",
+      "fileMatch": [
+        "^Pipfile$"
+      ],
+      "matchStrings": [
+        "python_version = \"(?<currentValue>\\d+\\.\\d+)\""
+      ],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "python/cpython",
+      "extractVersionTemplate": "^v(?<version>\\d+\\.\\d+)\\.\\d+$"
+    },
+    {
+      "customType": "regex",
+      "description": "Manage go version in cookiecutter.json",
+      "fileMatch": [
+        "^cookiecutter.json$"
+      ],
+      "matchStrings": [
+        "\"(?<currentValue>\\d+\\.\\d+)\""
+      ],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "golang/go",
+      "extractVersionTemplate": "^go(?<version>\\d+\\.\\d+)\\.\\d+$"
+    }
+  ]
+}
