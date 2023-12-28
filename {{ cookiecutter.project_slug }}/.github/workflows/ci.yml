@@ -8,8 +8,10 @@ on:
     branches:
       - {{ cookiecutter.main_branch }}
   pull_request:
+    branches:
+      - {{ cookiecutter.main_branch }}
 
-{% raw %}
+{% raw -%}
 jobs:
   build:
     timeout-minutes: 5
@@ -17,7 +19,9 @@ jobs:
     strategy:
       matrix:
         go-version:
+{%- endraw %}
           - "{{ cookiecutter.go_version }}"
+{%- raw %}
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
@@ -37,4 +41,4 @@ jobs:
         run: make vet
       - name: Vuln
         run: make vuln
-{% endraw %}
+{%- endraw %}
