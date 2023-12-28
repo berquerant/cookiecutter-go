@@ -3,6 +3,8 @@ import subprocess
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Union
+import glob
+import yaml
 
 from cookiecutter.utils import rmtree
 
@@ -30,6 +32,7 @@ def run(
     cmd: Union[str, list[str]], dir: Path, *args, **kwargs
 ) -> subprocess.CompletedProcess:
     with cd(dir):
+        print(f"[run] {cmd}")
         return subprocess.run(cmd, check=True, *args, **kwargs)
 
 
@@ -59,6 +62,16 @@ def check_result(result):
 
     for seq in sequnce:
         do(seq)
+
+    with cd(project_path):
+        print("[check] all cookiecutter has been replaced")
+        r = subprocess.run(["git", "grep", "cookiecutter"], capture_output=True, text=True)
+        assert len(r.stdout) == 0
+        print("[check] valid yaml")
+        for yaml_file in glob.glob(".github/**/*.yml", recursive=True):
+            with open(yaml_file) as f:
+                print(f"[yaml] {yaml_file}")
+                yaml.safe_load(f)
 
 
 def test_bake_and_make_default(cookies):
