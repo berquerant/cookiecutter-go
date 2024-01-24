@@ -6,22 +6,30 @@ permissions:
 on:
   pull_request:
     branches:
-      - {{ cookiecutter.main_branch }}
-{% raw %}
+      - main
+
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: github.actor == 'dependabot[bot]'
     steps:
       - name: Fetch metadata
         id: metadata
         uses: dependabot/fetch-metadata@v1
         with:
           alert-lookup: true
+{%- raw %}
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Merge patch update
-        if: ${{ steps.metadata.outputs.update-type == 'version-update:semver-patch' }}
+{%- endraw %}
+      - name: Merge patches and minor development updates
+        if: |
+          steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+          (steps.metadata.outputs.update-type == 'version-update:semver-minor' &&
+           steps.metadata.outputs.dependency-type == 'direct:development')
+{%- raw %}
         run: gh pr merge --auto --merge ${{ github.event.pull_request.html_url }}
+{%- endraw %}
         env:
+{%- raw %}
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-{% endraw %}
+{%- endraw %}
