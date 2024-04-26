@@ -31,3 +31,5 @@ jobs:
           check-latest: true
       - name: Test
         run: make test
+      - name: Vuln
+        run: make vuln
