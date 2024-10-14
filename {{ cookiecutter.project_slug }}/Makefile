@@ -16,7 +16,7 @@ test:
 
 .PHONY: init
 init:
-	$(GOMOD) tidy
+	$(GOMOD) tidy -v
 
 .PHONY: vuln
 vuln:
