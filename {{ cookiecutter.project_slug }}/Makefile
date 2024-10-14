@@ -25,3 +25,11 @@ vuln:
 .PHONY: vet
 vet:
 	go vet ./...
+
+# .PHONY: generate
+# generate:
+# 	go generate ./...
+
+# .PHONY: clean-generated
+# clean-generated:
+# 	find . -name "*_generated.go" -type f -delete
