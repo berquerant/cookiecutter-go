@@ -3,15 +3,16 @@ package main
 import (
 {% if cookiecutter.project_category == "Code-Generator" -%}
 	"bytes"
-	"io"
 	"os/exec"
 	"path/filepath"
 	"strings"
 {%- endif %}
 	"os"
+	"io"
 	"flag"
 	"fmt"
-	"log"
+	"log/slog"
+	"encoding/json"
 {% if cookiecutter.project_category == "Code-Generator" -%}
 	"golang.org/x/tools/go/packages"
 {%- endif %}
@@ -31,13 +32,11 @@ func Usage() {
 }
 
 func main() {
+	SetupLogger(os.Stderr, slog.LevelInfo)
 {% if cookiecutter.project_category == "Code-Generator" -%}
 	redirectToStdout := flag.Bool("stdout", false, "print result to stdout")
 	output           := flag.String("output", "", "output file name; default srcdir/{{ cookiecutter.command_name }}.go")
 {%- endif %}
-
-	log.SetFlags(0)
-	log.SetPrefix("{{ cookiecutter.command_name }}: ")
 
 	flag.Usage = Usage
 	flag.Parse()
@@ -50,12 +49,12 @@ func main() {
 	g.printf("package %s\n\n", g.pkgName)
 
 	if err := g.Generate(); err != nil {
-		log.Panicf("during generation %v", err)
+		Panic("during generation", Err(err))
 	}
 
 	w := NewResultWriter(flag.Args(), *output, *redirectToStdout)
 	if err := w.writeResult(g.Bytes()); err != nil {
-		log.Panicf("write file %v", err)
+		Panic("write file", Err(err))
 	}
 {%- elif cookiecutter.project_category == "Command" -%}
 	fmt.Println("Hello!")
@@ -143,7 +142,7 @@ func (r *ResultWriter) destDir() string {
 func isDirectory(p string) bool {
 	x, err := os.Stat(p)
 	if err != nil {
-		log.Fatal(err)
+		Panic("isDirectory", Err(err), slog.String("p", p))
 	}
 	return x.IsDir()
 }
@@ -165,10 +164,10 @@ func (g *Generator) parsePackage(patterns []string) {
 		Mode: packages.NeedName,
 	}, patterns...)
 	if err != nil {
-		log.Fatal(err)
+		Panic("Load package", Err(err))
 	}
 	if len(pkgs) != 1 {
-		log.Fatalf("%d packages found", len(pkgs))
+		Panic("Packages found", slog.Int("packages", len(pkgs)))
 	}
 	g.pkgName = pkgs[0].Name
 }
@@ -179,3 +178,35 @@ func (g *Generator) Generate() error {
 	return nil
 }
 {%- endif %}
+
+func SetupLogger(w io.Writer, level slog.Leveler) {
+	handler := slog.NewJSONHandler(w, &slog.HandlerOptions{
+		Level: level,
+	})
+	logger := slog.New(handler)
+	slog.SetDefault(logger)
+}
+
+func Err(err error) slog.Attr {
+	return slog.Any("err", err)
+}
+
+func Jsonify(v any) []byte {
+	b, _ := json.Marshal(v)
+	return b
+}
+
+func JSON(k string, v any) slog.Attr {
+	return slog.String(k, string(Jsonify(v)))
+}
+
+func Panic(msg string, args ...any) {
+	slog.Error(msg, args...)
+	panic(msg)
+}
+
+func PanicOnError(err error) {
+	if err != nil {
+		panic(err)
+	}
+}

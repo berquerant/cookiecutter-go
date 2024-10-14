@@ -1,5 +1,5 @@
 GOMOD = go mod
-GOBUILD = go build -trimpath -race -v
+GOBUILD = go build -trimpath -v
 GOTEST = go test -v -cover -race
 
 ROOT = $(shell git rev-parse --show-toplevel)
@@ -16,7 +16,7 @@ test:
 
 .PHONY: init
 init:
-	$(GOMOD) tidy
+	$(GOMOD) tidy -v
 
 .PHONY: vuln
 vuln:
@@ -26,13 +26,10 @@ vuln:
 vet:
 	go vet ./...
 
-DOCKER_RUN = docker run --rm -v "$(ROOT)":/usr/src/myapp -w /usr/src/myapp
-DOCKER_IMAGE = golang:{{ cookiecutter.go_version }}
+# .PHONY: generate
+# generate:
+# 	go generate ./...
 
-.PHONY: docker-test
-docker-test:
-	$(DOCKER_RUN) $(DOCKER_GO_IMAGE) $(GOTEST) ./...
-
-.PHONY: docker-dist
-docker-dist:
-	$(DOCKER_RUN) $(DOCKER_GO_IMAGE) $(GOBUILD) -o $(BIN) $(CMD)
+# .PHONY: clean-generated
+# clean-generated:
+# 	find . -name "*_generated.go" -type f -delete
