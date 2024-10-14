@@ -12,7 +12,7 @@ pytest-cookies = "*"
 pyyaml = "*"
 
 [requires]
-python_version = "3.12"
+python_version = "3.13"
 
 [scripts]
 test = "pytest -s -v --ff --doctest-modules tests"
