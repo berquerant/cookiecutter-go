@@ -2,3 +2,5 @@ module github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_slu
 
 
 go {{ cookiecutter.go_version }}
+
+tool golang.org/x/vuln/cmd/govulncheck

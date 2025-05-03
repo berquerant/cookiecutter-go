@@ -11,7 +11,7 @@
   ],
   "command_name": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
   "go_version": [
-    "1.23.2"
+    "1.24.2"
   ],
   "main_branch": "main"
 }
