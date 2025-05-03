@@ -10,6 +10,7 @@ pytest = "*"
 cookiecutter = "*"
 pytest-cookies = "*"
 pyyaml = "*"
+safety = "*"
 
 [requires]
 python_version = "3.13"
